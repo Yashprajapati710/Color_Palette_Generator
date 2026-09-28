@@ -8,22 +8,23 @@
 }
 
 body {
-  background: linear-gradient(135deg, #83a8df, #c3cfe2);
+  background: linear-gradient(135deg, #dce6f2, #eef2f7);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  transition: background 0.3s ease;
+  color: #334155;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .container {
-  background-color: #ffffff;
+  background-color: #f8fafc;
   border-radius: 1rem;
   padding: 2rem;
   width: 100%;
-  max-width: 800px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  max-width: 1000px;
+  box-shadow: 0 10px 25px rgba(71, 85, 105, 0.18);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -35,7 +36,7 @@ body {
 }
 
 h1 {
-  color: #333333;
+  color: #334155;
   position: relative;
   padding-bottom: 0.5rem;
 }
@@ -56,8 +57,8 @@ h1::after {
   height: 45px;
   border: none;
   border-radius: 50%;
-  background: #f1f5f9;
-  color: #333333;
+  background: #e8eef5;
+  color: #475569;
   font-size: 1.1rem;
   cursor: pointer;
   transition: 0.3s ease;
@@ -65,7 +66,7 @@ h1::after {
 
 #theme-toggle:hover {
   transform: rotate(15deg);
-  background: #e2e8f0;
+  background: #dce5ef;
 }
 
 .controls {
@@ -113,7 +114,7 @@ h1::after {
   padding: 0.65rem 2rem 0.65rem 0.8rem;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
-  background: #ffffff;
+  background: #eef2f6;
   color: #334155;
   font-size: 0.9rem;
   cursor: pointer;
@@ -124,50 +125,60 @@ h1::after {
   border-color: #667eea;
 }
 
+/* COLOR PALETTE */
+
 .palette-container {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1.2rem;
+  grid-template-columns: repeat(5, minmax(170px, 1fr));
 }
 
 .color-box {
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  background: #edf2f7;
+  box-shadow: 0 4px 12px rgba(71, 85, 105, 0.15);
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .color-box:hover {
   transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(71, 85, 105, 0.2);
 }
 
 .color {
-  height: 120px;
+  height: 140px;
   cursor: pointer;
 }
 
 .color-info {
-  background-color: #ffffff;
-  padding: 0.7rem;
+  background-color: #edf2f7;
+  padding: 0.8rem 0.5rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  min-height: 85px;
   transition: background-color 0.3s ease;
 }
 
 .hex-value {
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  word-break: break-word;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  text-align: center;
+  color: #334155;
 }
 
 .color-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
 }
 
 .lock-btn,
@@ -202,6 +213,7 @@ h1::after {
 
 body.dark {
   background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f8fafc;
 }
 
 body.dark .container {
@@ -233,6 +245,10 @@ body.dark #color-format {
   color: #f8fafc;
 }
 
+body.dark .color-box {
+  background-color: #334155;
+}
+
 body.dark .color-info {
   background-color: #334155;
   color: #f8fafc;
@@ -252,7 +268,21 @@ body.dark .copy-btn:hover {
   color: #93c5fd;
 }
 
-@media (max-width: 768px) {
+/* TABLET */
+
+@media (max-width: 900px) {
+  .container {
+    max-width: 760px;
+  }
+
+  .palette-container {
+    grid-template-columns: repeat(3, minmax(160px, 1fr));
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
   .container {
     padding: 1.5rem;
   }
@@ -283,15 +313,17 @@ body.dark .copy-btn:hover {
   }
 
   .palette-container {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
   }
 
   .color {
-    height: 100px;
+    height: 120px;
   }
 }
 
-@media (max-width: 480px) {
+/* SMALL MOBILE */
+
+@media (max-width: 400px) {
   body {
     padding: 10px;
   }
@@ -309,22 +341,22 @@ body.dark .copy-btn:hover {
   }
 
   .palette-container {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   .color {
-    height: 110px;
+    height: 130px;
   }
 
   .color-info {
-    padding: 0.6rem;
+    padding: 0.7rem;
   }
 
   .hex-value {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
   }
 
   .color-actions {
-    gap: 8px;
+    gap: 20px;
   }
 }

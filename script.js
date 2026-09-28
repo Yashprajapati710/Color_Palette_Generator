@@ -51,7 +51,6 @@ paletteContainer.addEventListener("click", function (e) {
   }
 });
 
-
 function toggleLock(index, lockButton) {
   lockedColors[index] = !lockedColors[index];
 
@@ -68,7 +67,6 @@ function toggleLock(index, lockButton) {
   }
 }
 
-
 function showCopySuccess(element) {
   element.classList.remove("far", "fa-copy");
   element.classList.add("fas", "fa-check");
@@ -81,7 +79,6 @@ function showCopySuccess(element) {
     element.style.color = "";
   }, 1500);
 }
-
 
 function generatePalette() {
   colorBoxes.forEach((box, index) => {
@@ -99,9 +96,9 @@ function generatePalette() {
   updateColorFormats();
 }
 
-
 function generateRandomColor() {
   const letters = "0123456789ABCDEF";
+
   let color = "#";
 
   for (let i = 0; i < 6; i++) {
@@ -110,7 +107,6 @@ function generateRandomColor() {
 
   return color;
 }
-
 
 function updateColorFormats() {
   const selectedFormat = colorFormat.value;
@@ -141,7 +137,6 @@ function updateColorFormats() {
   });
 }
 
-
 function rgbToHex(rgb) {
   const values = rgb.match(/\d+/g);
 
@@ -156,12 +151,13 @@ function rgbToHex(rgb) {
   return (
     "#" +
     [r, g, b]
-      .map((value) => value.toString(16).padStart(2, "0"))
+      .map((value) =>
+        value.toString(16).padStart(2, "0")
+      )
       .join("")
       .toUpperCase()
   );
 }
-
 
 function hexToRgb(hex) {
   const cleanHex = hex.replace("#", "");
@@ -172,7 +168,6 @@ function hexToRgb(hex) {
 
   return `rgb(${r}, ${g}, ${b})`;
 }
-
 
 function hexToHsl(hex) {
   const cleanHex = hex.replace("#", "");
@@ -186,12 +181,15 @@ function hexToHsl(hex) {
 
   let h;
   let s;
+
   const l = (max + min) / 2;
 
   if (max === min) {
     h = 0;
     s = 0;
-  } else {
+  }
+
+  else {
     const difference = max - min;
 
     s =
@@ -223,11 +221,11 @@ function hexToHsl(hex) {
 
   h = Math.round(h * 360);
   s = Math.round(s * 100);
+
   const lightness = Math.round(l * 100);
 
   return `hsl(${h}, ${s}%, ${lightness}%)`;
 }
-
 
 /* DARK MODE */
 
@@ -235,26 +233,32 @@ function setTheme(isDark) {
   if (isDark) {
     document.body.classList.add("dark");
 
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    themeToggle.innerHTML =
+      '<i class="fas fa-sun"></i>';
+
     themeToggle.title = "Switch to light mode";
-  } else {
+  }
+
+  else {
     document.body.classList.remove("dark");
 
-    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    themeToggle.innerHTML =
+      '<i class="fas fa-moon"></i>';
+
     themeToggle.title = "Switch to dark mode";
   }
 }
 
-
 themeToggle.addEventListener("click", function () {
-  const isDark = document.body.classList.toggle("dark");
+  const isDark =
+    document.body.classList.toggle("dark");
 
   localStorage.setItem("darkMode", isDark);
 
   setTheme(isDark);
 });
 
-
-const savedTheme = localStorage.getItem("darkMode") === "true";
+const savedTheme =
+  localStorage.getItem("darkMode") === "true";
 
 setTheme(savedTheme);
