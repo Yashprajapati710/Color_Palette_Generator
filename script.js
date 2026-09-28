@@ -1,12 +1,17 @@
 const generateBtn = document.getElementById("generate-btn");
 const paletteContainer = document.querySelector(".palette-container");
 const themeToggle = document.getElementById("theme-toggle");
+const colorFormat = document.getElementById("color-format");
 
 const colorBoxes = document.querySelectorAll(".color-box");
 
 let lockedColors = [false, false, false, false, false];
 
 generateBtn.addEventListener("click", generatePalette);
+
+colorFormat.addEventListener("change", function () {
+  updateColorFormats();
+});
 
 paletteContainer.addEventListener("click", function (e) {
   const colorBox = e.target.closest(".color-box");
@@ -18,21 +23,21 @@ paletteContainer.addEventListener("click", function (e) {
   const index = Array.from(colorBoxes).indexOf(colorBox);
 
   if (e.target.classList.contains("copy-btn")) {
-    const hexValue =
+    const colorValue =
       e.target.parentElement.previousElementSibling.textContent;
 
     navigator.clipboard
-      .writeText(hexValue)
+      .writeText(colorValue)
       .then(() => showCopySuccess(e.target))
       .catch((err) => console.log(err));
   }
 
   else if (e.target.classList.contains("color")) {
-    const hexValue =
+    const colorValue =
       e.target.nextElementSibling.querySelector(".hex-value").textContent;
 
     navigator.clipboard
-      .writeText(hexValue)
+      .writeText(colorValue)
       .then(() =>
         showCopySuccess(
           e.target.nextElementSibling.querySelector(".copy-btn")
@@ -79,19 +84,19 @@ function showCopySuccess(element) {
 
 
 function generatePalette() {
-  const colors = [];
-
   colorBoxes.forEach((box, index) => {
-    const hexValue = box.querySelector(".hex-value").textContent;
-
     if (lockedColors[index]) {
-      colors.push(hexValue);
-    } else {
-      colors.push(generateRandomColor());
+      return;
     }
+
+    const newColor = generateRandomColor();
+
+    const colorDiv = box.querySelector(".color");
+
+    colorDiv.style.backgroundColor = newColor;
   });
 
-  updatePaletteDisplay(colors);
+  updateColorFormats();
 }
 
 
@@ -107,16 +112,120 @@ function generateRandomColor() {
 }
 
 
-function updatePaletteDisplay(colors) {
-  colorBoxes.forEach((box, index) => {
-    const color = colors[index];
+function updateColorFormats() {
+  const selectedFormat = colorFormat.value;
 
+  colorBoxes.forEach((box) => {
     const colorDiv = box.querySelector(".color");
-    const hexValue = box.querySelector(".hex-value");
+    const colorValue = box.querySelector(".hex-value");
 
-    colorDiv.style.backgroundColor = color;
-    hexValue.textContent = color;
+    const hexColor = rgbToHex(
+      getComputedStyle(colorDiv).backgroundColor
+    );
+
+    let formattedColor;
+
+    if (selectedFormat === "hex") {
+      formattedColor = hexColor;
+    }
+
+    else if (selectedFormat === "rgb") {
+      formattedColor = hexToRgb(hexColor);
+    }
+
+    else if (selectedFormat === "hsl") {
+      formattedColor = hexToHsl(hexColor);
+    }
+
+    colorValue.textContent = formattedColor;
   });
+}
+
+
+function rgbToHex(rgb) {
+  const values = rgb.match(/\d+/g);
+
+  if (!values) {
+    return "#000000";
+  }
+
+  const r = Number(values[0]);
+  const g = Number(values[1]);
+  const b = Number(values[2]);
+
+  return (
+    "#" +
+    [r, g, b]
+      .map((value) => value.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase()
+  );
+}
+
+
+function hexToRgb(hex) {
+  const cleanHex = hex.replace("#", "");
+
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+
+function hexToHsl(hex) {
+  const cleanHex = hex.replace("#", "");
+
+  const r = parseInt(cleanHex.substring(0, 2), 16) / 255;
+  const g = parseInt(cleanHex.substring(2, 4), 16) / 255;
+  const b = parseInt(cleanHex.substring(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+
+  let h;
+  let s;
+  const l = (max + min) / 2;
+
+  if (max === min) {
+    h = 0;
+    s = 0;
+  } else {
+    const difference = max - min;
+
+    s =
+      l > 0.5
+        ? difference / (2 - max - min)
+        : difference / (max + min);
+
+    switch (max) {
+      case r:
+        h =
+          ((g - b) / difference +
+            (g < b ? 6 : 0)) /
+          6;
+        break;
+
+      case g:
+        h =
+          ((b - r) / difference + 2) /
+          6;
+        break;
+
+      case b:
+        h =
+          ((r - g) / difference + 4) /
+          6;
+        break;
+    }
+  }
+
+  h = Math.round(h * 360);
+  s = Math.round(s * 100);
+  const lightness = Math.round(l * 100);
+
+  return `hsl(${h}, ${s}%, ${lightness}%)`;
 }
 
 
